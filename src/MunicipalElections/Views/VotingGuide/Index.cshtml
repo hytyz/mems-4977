@@ -1,0 +1,51 @@
+@model List<VotingGuideGroup>
+@{
+    ViewData["Title"] = "My Voting Guide";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">My Voting Guide</h1>
+    <div class="no-print">
+        @if (Model.Any())
+        {
+            <form class="d-inline" asp-action="Clear" method="post">
+                <button type="submit" class="btn btn-outline-danger me-2">Clear all</button>
+            </form>
+            <a class="btn btn-outline-primary me-2" asp-action="Print">Printer View</a>
+            <a class="btn btn-primary" asp-action="ExportPdf">Download PDF</a>
+        }
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Your guide is empty. Browse the <a asp-controller="Candidates" asp-action="Index">candidate directory</a> and add your preferred candidates.
+    </div>
+}
+else
+{
+    @foreach (var group in Model)
+    {
+        <h2 class="h4 mt-4">@group.Municipality.Name <span class="text-muted fs-6">— Election @group.Municipality.ElectionDate.ToString("MMMM d, yyyy")</span></h2>
+        <div class="list-group mb-3">
+            @foreach (var candidate in group.Candidates)
+            {
+                <div class="list-group-item d-flex align-items-center gap-3">
+                    @if (!string.IsNullOrWhiteSpace(candidate.PhotoFileName))
+                    {
+                        <img src="~/uploads/candidates/@candidate.PhotoFileName" alt="@candidate.Name" style="width:56px;height:56px;object-fit:cover" class="rounded" />
+                    }
+                    <div class="flex-grow-1">
+                        <strong>@candidate.Name</strong><br />
+                        <span class="text-muted">@candidate.Position!.Name</span>
+                    </div>
+                    <form class="no-print" asp-action="Remove" method="post">
+                        <input type="hidden" name="candidateId" value="@candidate.CandidateId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+}

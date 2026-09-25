@@ -1,0 +1,43 @@
+@model List<VotingGuideGroup>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Printable Voting Guide";
+}
+
+<div class="print-guide">
+    <div class="text-center mb-4 no-print">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print this guide</button>
+    </div>
+    <h1 class="h2">Personal Voting Guide</h1>
+    <p class="text-muted mb-4">Printed on @DateTime.Now.ToString("MMMM d, yyyy")</p>
+
+    @foreach (var group in Model)
+    {
+        <section class="mb-4">
+            <h2 class="h4">@group.Municipality.Name</h2>
+            <p class="text-muted">Election Date: @group.Municipality.ElectionDate.ToString("MMMM d, yyyy")</p>
+
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                @foreach (var candidate in group.Candidates)
+                {
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="h5 card-title">@candidate.Name</h3>
+                                <p class="card-text text-muted">Position: @candidate.Position!.Name</p>
+                                @if (!string.IsNullOrWhiteSpace(candidate.PhotoFileName))
+                                {
+                                    <img src="~/uploads/candidates/@candidate.PhotoFileName" class="card-img-guidetop rounded mb-2" alt="@candidate.Name" />
+                                }
+                                @if (!string.IsNullOrWhiteSpace(candidate.Profile))
+                                {
+                                    <p class="card-text small">@candidate.Profile</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+</div>
