@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var isSuperAdmin = (bool)(ViewData["IsSuperAdmin"] ?? false);
+}
+
+<h1 class="h3 mb-4">Admin Dashboard</h1>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card text-bg-primary shadow-sm">
+            <div class="card-body">
+                <h2 class="h6 card-subtitle text-uppercase opacity-75">Municipalities</h2>
+                <p class="display-6 mb-0">@ViewData["MunicipalityCount"]</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success shadow-sm">
+            <div class="card-body">
+                <h2 class="h6 card-subtitle text-uppercase opacity-75">Positions</h2>
+                <p class="display-6 mb-0">@ViewData["PositionCount"]</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-info shadow-sm">
+            <div class="card-body">
+                <h2 class="h6 card-subtitle text-uppercase opacity-75">Candidates</h2>
+                <p class="display-6 mb-0">@ViewData["CandidateCount"]</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="h4 mt-5 mb-3">Manage</h2>
+<div class="list-group">
+    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-area="Admin" asp-controller="Municipalities" asp-action="Index">
+        Municipalities
+        @if (isSuperAdmin)
+        {
+            <span class="badge text-bg-secondary">Super Admin</span>
+        }
+    </a>
+    <a class="list-group-item list-group-item-action" asp-area="Admin" asp-controller="Positions" asp-action="Index">Positions</a>
+    <a class="list-group-item list-group-item-action" asp-area="Admin" asp-controller="Candidates" asp-action="Index">Candidates</a>
+</div>

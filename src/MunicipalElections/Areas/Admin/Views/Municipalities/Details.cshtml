@@ -1,0 +1,36 @@
+@model Municipality
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1 class="h3">@Model.Name</h1>
+<hr />
+<div class="d-flex gap-3 align-items-start mb-4">
+    @if (!string.IsNullOrWhiteSpace(Model.LogoFileName))
+    {
+        <img src="~/uploads/municipalities/@Model.LogoFileName" alt="@Model.Name logo" class="municipality-logo" />
+    }
+    <dl class="row mb-0 flex-grow-1">
+        <dt class="col-sm-3">Province</dt><dd class="col-sm-9">@Model.Province</dd>
+        <dt class="col-sm-3">Election Date</dt><dd class="col-sm-9">@Model.ElectionDate.ToString("MMMM d, yyyy")</dd>
+        <dt class="col-sm-3">Description</dt><dd class="col-sm-9">@Model.Description</dd>
+    </dl>
+</div>
+
+<h2 class="h5">Positions</h2>
+@if (Model.Positions.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var position in Model.Positions)
+        {
+            <li class="list-group-item d-flex justify-content-between">@position.Name <span class="badge text-bg-secondary">@position.SeatsAvailable seat@(position.SeatsAvailable == 1 ? "" : "s")</span></li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">No positions yet.</p>
+}
+
+<a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.MunicipalityId">Edit</a>
+<a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>

@@ -1,0 +1,19 @@
+@model Municipality
+@{
+    ViewData["Title"] = "Delete Municipality";
+}
+
+<h1 class="h3">Delete Municipality</h1>
+<h2 class="h5 text-danger">Are you sure you want to delete this?</h2>
+<hr />
+<dl class="row">
+    <dt class="col-sm-3">Name</dt><dd class="col-sm-9">@Model.Name</dd>
+    <dt class="col-sm-3">Province</dt><dd class="col-sm-9">@Model.Province</dd>
+    <dt class="col-sm-3">Election Date</dt><dd class="col-sm-9">@Model.ElectionDate.ToString("MMMM d, yyyy")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="MunicipalityId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+</form>
