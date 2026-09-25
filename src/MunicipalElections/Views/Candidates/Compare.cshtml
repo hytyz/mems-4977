@@ -1,0 +1,90 @@
+@model IEnumerable<Candidate>
+@{
+    ViewData["Title"] = "Compare Candidates";
+    var candidates = Model.ToList();
+    var a = candidates.FirstOrDefault();
+    var b = candidates.Skip(1).FirstOrDefault();
+}
+
+<h1 class="h3 mb-4">Compare Candidates</h1>
+
+<form method="get" class="row g-2 align-items-end mb-4 no-print">
+    <div class="col-md-5">
+        <label class="form-label" for="idA">Candidate A</label>
+        <select id="idA" name="idA" class="form-select" asp-items="ViewBag.CandidateA">
+            <option value="">Select a candidate</option>
+        </select>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label" for="idB">Candidate B</label>
+        <select id="idB" name="idB" class="form-select" asp-items="ViewBag.CandidateB">
+            <option value="">Select a candidate</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary">Compare</button>
+    </div>
+</form>
+
+@if (a == null)
+{
+    <div class="alert alert-info">Select two candidates to compare them side by side.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered align-top">
+            <thead>
+                <tr>
+                    <th style="width:20%"></th>
+                    <th scope="col">@a.Name</th>
+                    @if (b != null)
+                    {
+                        <th scope="col">@b.Name</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Municipality</th>
+                    <td>@a.Position!.Municipality!.Name</td>
+                    @if (b != null) { <td>@b.Position!.Municipality!.Name</td> }
+                </tr>
+                <tr>
+                    <th scope="row">Position</th>
+                    <td>@a.Position!.Name</td>
+                    @if (b != null) { <td>@b.Position!.Name</td> }
+                </tr>
+                <tr>
+                    <th scope="row">Biography</th>
+                    <td>@a.Profile</td>
+                    @if (b != null) { <td>@b.Profile</td> }
+                </tr>
+                <tr>
+                    <th scope="row">Website</th>
+                    <td>@(string.IsNullOrWhiteSpace(a.Website) ? "—" : a.Website)</td>
+                    @if (b != null)
+                    {
+                        <td>@(string.IsNullOrWhiteSpace(b.Website) ? "—" : b.Website)</td>
+                    }
+                </tr>
+                <tr>
+                    <th scope="row">Email</th>
+                    <td>@(string.IsNullOrWhiteSpace(a.Email) ? "—" : a.Email)</td>
+                    @if (b != null)
+                    {
+                        <td>@(string.IsNullOrWhiteSpace(b.Email) ? "—" : b.Email)</td>
+                    }
+                </tr>
+                <tr>
+                    <th scope="row">Endorsements</th>
+                    <td>@a.Endorsements.Count</td>
+                    @if (b != null)
+                    {
+                        <td>@b.Endorsements.Count</td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

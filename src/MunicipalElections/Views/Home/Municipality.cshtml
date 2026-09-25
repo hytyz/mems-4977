@@ -1,0 +1,48 @@
+@model Municipality
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb" class="mt-2">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="d-flex align-items-center gap-4 mb-4">
+    @if (!string.IsNullOrWhiteSpace(Model.LogoFileName))
+    {
+        <img src="~/uploads/municipalities/@Model.LogoFileName" alt="@Model.Name logo" class="municipality-logo" />
+    }
+    <div>
+        <h1>@Model.Name</h1>
+        <p class="text-muted mb-1">@Model.Province</p>
+        <p class="mb-1"><strong>Election date:</strong> @Model.ElectionDate.ToString("MMMM d, yyyy")</p>
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p>@Model.Description</p>
+        }
+    </div>
+</div>
+
+<h2 class="h4 mb-3">Elected positions</h2>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    @foreach (var position in Model.Positions.OrderBy(p => p.Name))
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 card-title">@position.Name</h3>
+                    <p class="card-text text-muted">@position.SeatsAvailable seat@(position.SeatsAvailable == 1 ? "" : "s") available</p>
+                    <p class="card-text">@position.Candidates.Count candidate@(position.Candidates.Count == 1 ? "" : "s")</p>
+                    <a class="btn btn-sm btn-outline-primary"
+                       asp-controller="Candidates"
+                       asp-action="Index"
+                       asp-route-municipalityId="@Model.MunicipalityId"
+                       asp-route-positionId="@position.PositionId">View candidates</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

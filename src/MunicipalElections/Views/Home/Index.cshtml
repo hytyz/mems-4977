@@ -1,0 +1,32 @@
+@model IEnumerable<Municipality>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="px-4 py-5 my-3 text-center rounded-3 bg-body-tertiary">
+    <h1 class="display-5 fw-bold">Municipal Elections</h1>
+    <p class="lead mb-1">Review candidates and build your personal voting guide.</p>
+    <p class="text-muted">Next municipal election: October 17, 2026</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Candidates" asp-action="Index">Browse Candidates</a>
+</div>
+
+<h2 class="h4 mb-3">Municipalities</h2>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    @foreach (var municipality in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="h5 card-title">@municipality.Name</h3>
+                    <p class="card-text text-muted mb-1">@municipality.Province</p>
+                    <p class="card-text small">Election: <strong>@municipality.ElectionDate.ToString("MMMM d, yyyy")</strong></p>
+                    @if (!string.IsNullOrWhiteSpace(municipality.Description))
+                    {
+                        <p class="card-text">@municipality.Description</p>
+                    }
+                    <a class="btn btn-outline-primary mt-auto" asp-controller="Home" asp-action="Municipality" asp-route-id="@municipality.MunicipalityId">View positions &amp; candidates</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

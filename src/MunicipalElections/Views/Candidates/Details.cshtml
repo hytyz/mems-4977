@@ -1,0 +1,103 @@
+@model Candidate
+@{
+    ViewData["Title"] = Model.Name;
+    var inGuide = (bool)(ViewData["InGuide"] ?? false);
+}
+
+<nav aria-label="breadcrumb" class="mt-2">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Candidates</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        @if (!string.IsNullOrWhiteSpace(Model.PhotoFileName))
+        {
+            <img src="~/uploads/candidates/@Model.PhotoFileName" class="img-fluid rounded" alt="@Model.Name" />
+        }
+        else
+        {
+            <div class="img-fluid rounded d-flex align-items-center justify-content-center bg-secondary-subtle text-secondary" style="height:300px">
+                <span>No photo</span>
+            </div>
+        }
+        <div class="d-grid gap-2 mt-3 no-print">
+            @if (inGuide)
+            {
+                <form asp-controller="VotingGuide" asp-action="Remove" method="post">
+                    <input type="hidden" name="candidateId" value="@Model.CandidateId" />
+                    <button type="submit" class="btn btn-outline-danger w-100">Remove from my guide</button>
+                </form>
+            }
+            else
+            {
+                <form asp-controller="VotingGuide" asp-action="Add" method="post">
+                    <input type="hidden" name="candidateId" value="@Model.CandidateId" />
+                    <button type="submit" class="btn btn-primary w-100">Add to my voting guide</button>
+                </form>
+            }
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h1>@Model.Name</h1>
+        <p class="text-muted">
+            @Model.Position!.Name — @Model.Position!.Municipality!.Name
+        </p>
+        @if (!string.IsNullOrWhiteSpace(Model.Profile))
+        {
+            <h2 class="h5">Biography</h2>
+            <p>@Model.Profile</p>
+        }
+        <ul class="list-unstyled">
+            @if (!string.IsNullOrWhiteSpace(Model.Email))
+            {
+                <li class="mb-1">✉️ <a href="mailto:@Model.Email">@Model.Email</a></li>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Website))
+            {
+                <li class="mb-1">🌐 <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a></li>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SocialX))
+            {
+                <li class="mb-1">𝕏 <a href="@Model.SocialX" target="_blank" rel="noopener">X (Twitter)</a></li>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SocialFacebook))
+            {
+                <li class="mb-1">📘 <a href="@Model.SocialFacebook" target="_blank" rel="noopener">Facebook</a></li>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SocialInstagram))
+            {
+                <li class="mb-1">📷 <a href="@Model.SocialInstagram" target="_blank" rel="noopener">Instagram</a></li>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SocialLinkedIn))
+            {
+                <li class="mb-1">💼 <a href="@Model.SocialLinkedIn" target="_blank" rel="noopener">LinkedIn</a></li>
+            }
+        </ul>
+        @if (!string.IsNullOrWhiteSpace(Model.VideoUrl))
+        {
+            <h2 class="h5">Video</h2>
+            <a href="@Model.VideoUrl" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Watch video</a>
+        }
+        @if (Model.Endorsements.Any())
+        {
+            <h2 class="h5 mt-4">Endorsements</h2>
+            @foreach (var endorsement in Model.Endorsements)
+            {
+                <blockquote class="blockquote border-start border-3 ps-3">
+                    <p class="mb-1">@endorsement.Text</p>
+                    <footer class="blockquote-footer">
+                        @endorsement.EndorserName
+                        @if (!string.IsNullOrWhiteSpace(endorsement.Organization))
+                        {
+                            <span>(@endorsement.Organization)</span>
+                        }
+                    </footer>
+                </blockquote>
+            }
+        }
+    </div>
+</div>
