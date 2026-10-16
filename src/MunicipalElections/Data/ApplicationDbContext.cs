@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Candidate> Candidates => Set<Candidate>();
     public DbSet<Endorsement> Endorsements => Set<Endorsement>();
     public DbSet<MunicipalityAdmin> MunicipalityAdmins => Set<MunicipalityAdmin>();
+    public DbSet<SavedCandidate> SavedCandidates => Set<SavedCandidate>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -78,6 +79,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             entity.HasOne(ma => ma.Municipality)
                 .WithMany(m => m.MunicipalityAdmins)
                 .HasForeignKey(ma => ma.MunicipalityId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // --- API (mobile app): saved voting-guide candidates per user ---
+        builder.Entity<SavedCandidate>(entity =>
+        {
+            entity.Property(sc => sc.UserId).HasMaxLength(450);
+            entity.HasIndex(sc => new { sc.UserId, sc.CandidateId }).IsUnique();
+            entity.HasOne(sc => sc.User)
+                .WithMany()
+                .HasForeignKey(sc => sc.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(sc => sc.Candidate)
+                .WithMany()
+                .HasForeignKey(sc => sc.CandidateId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }
