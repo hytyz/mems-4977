@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Custom Info.plist merged OVER xtool's generated one (xtool.yml
+     infoPath). Keys omitted here are supplied by xtool itself:
+     CFBundleIdentifier comes from bundleID in xtool.yml, CFBundleName/
+     CFBundleExecutable from the library product ("MunicipalCompanion"),
+     CFBundleShortVersionString defaults to "1.0.0", MinimumOSVersion to the
+     iOS deployment target, and UILaunchScreen to an empty dictionary. Do NOT
+     add CFBundleIdentifier here: xtool does not expand build-setting
+     placeholders, and this plist wins the merge. -->
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Municipal Companion</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- The dev API is plain http, so arbitrary loads are allowed in this
+		     assignment build. Remove for any production/App Store build. -->
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

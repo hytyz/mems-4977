@@ -1,0 +1,12 @@
+# xtool app manifest (schema v1 — verified against xtool 1.22.2 `xtool new`).
+# Recognized keys: version, bundleID (or orgID), product, infoPath,
+# entitlementsPath, iconPath, resources, extensions, skipLSP.
+# There are no display-name/version keys: defaults come from the generated
+# Info.plist (CFBundleShortVersionString "1.0.0"), and Info.plist below is
+# merged OVER it to override the display name, orientations, and ATS policy.
+version: 1
+bundleID: com.polina.municipalcompanion
+product: MunicipalCompanion
+infoPath: Info.plist
+# Copied into the app bundle (resolvable at Bundle.main.resourcePath).
+resources: [".env"]
