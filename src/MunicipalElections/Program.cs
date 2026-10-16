@@ -1,5 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MunicipalElections.Auth;
 using MunicipalElections.Data;
 using MunicipalElections.Models;
 using MunicipalElections.Services;
@@ -7,7 +11,13 @@ using MunicipalElections.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    // --- API (mobile app): camelCase JSON for all controllers ---
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddRazorPages();
 
 builder.Services.AddHttpContextAccessor();
@@ -37,6 +47,29 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
 });
+
+// --- API (mobile app) ---
+// JWT bearer tokens for the REST API. The Identity cookie remains the DEFAULT
+// authentication scheme (so MVC pages keep working exactly as before); API
+// controllers opt into the JWT scheme explicitly via
+// [Authorize(AuthenticationSchemes = ApiAuth.JwtScheme)].
+builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddAuthentication()
+    .AddJwtBearer(ApiAuth.JwtScheme, options =>
+    {
+        var jwt = builder.Configuration.GetSection("Jwt");
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt["Issuer"],
+            ValidateAudience = true,
+            ValidAudience = jwt["Audience"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwt["Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured."))),
+            ValidateLifetime = true
+        };
+    });
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
