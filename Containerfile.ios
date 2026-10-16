@@ -1,0 +1,83 @@
+# iOS development container for Linux: Swift toolchain + xtool
+# (https://github.com/xtool-org/xtool), a cross-platform Xcode replacement
+# that cross-compiles SwiftPM/SwiftUI iOS apps on Linux.
+#
+# Versions are pinned for reproducibility:
+#   - Swift toolchain: 6.4.1 (xtool requires a Swift 6.4 toolchain)
+#   - xtool: 1.22.2 (GitHub release AppImage)
+#
+# ONE-TIME MANUAL STEP (cannot be automated here):
+# The iOS ("Darwin") Swift SDK is generated from Xcode.xip, which Apple only
+# distributes behind an authenticated developer login. Inside the running
+# container, provide an Xcode 27.xip and run:
+#
+#     xtool sdk install /path/to/Xcode_27.0.xip   # add --slim to save disk
+#     xtool sdk status                            # -> "Darwin SDK is installed"
+#     swift sdk list                              # -> darwin
+#
+# The Xcode.xip can be downloaded on the macOS machine (developer.apple.com,
+# requires Apple ID login) and copied into the repo so it appears at /app/.
+# NOTE: `xtool setup` (Apple ID login) is ONLY needed for signing and
+# deploying to physical devices. `xtool dev build` (build without signing)
+# works without any Apple account, once the SDK is installed.
+
+FROM ubuntu:24.04
+
+ARG SWIFT_VERSION=6.4.1
+ARG XTOOL_VERSION=1.22.2
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+
+# Swift toolchain runtime deps + general build tooling + usbmuxd/libimobiledevice
+# (usbmuxd is only needed to talk to physical devices; kept per the xtool docs).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      binutils \
+      build-essential \
+      ca-certificates \
+      curl \
+      git \
+      gnupg2 \
+      libc6-dev \
+      libcurl4-openssl-dev \
+      libedit2 \
+      libgcc-13-dev \
+      libncurses-dev \
+      libpython3-dev \
+      libsqlite3-0 \
+      libstdc++-13-dev \
+      libxml2-dev \
+      libz3-dev \
+      pkg-config \
+      python3 \
+      tzdata \
+      unzip \
+      zlib1g-dev \
+      usbmuxd \
+      libimobiledevice-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Swift 6.4.x open-source toolchain for Ubuntu 24.04, installed to /opt/swift.
+RUN curl -fL \
+      "https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2404/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz" \
+      -o /tmp/swift.tar.gz \
+    && mkdir -p /opt/swift \
+    && tar -xzf /tmp/swift.tar.gz -C /opt/swift --strip-components=1 \
+    && rm /tmp/swift.tar.gz
+ENV PATH="/opt/swift/usr/bin:${PATH}"
+
+# xtool AppImage from the pinned GitHub release. AppImages normally need FUSE
+# (not available inside containers); APPIMAGE_EXTRACT_AND_RUN=1 makes the
+# AppImage runtime extract itself to a temp dir and run without FUSE.
+RUN curl -fL \
+      "https://github.com/xtool-org/xtool/releases/download/${XTOOL_VERSION}/xtool-$(uname -m).AppImage" \
+      -o /usr/local/bin/xtool \
+    && chmod +x /usr/local/bin/xtool
+ENV APPIMAGE_EXTRACT_AND_RUN=1
+
+# Smoke test: verify the pinned toolchain and xtool actually run at image build
+# time. (Fails the build early if something is broken.)
+RUN swift --version && xtool --help >/dev/null && rm -rf /tmp/*
+
+# The Darwin/iOS SDK is intentionally NOT installed at build time: it can only
+# be generated from an authenticated Xcode.xip download (see note at top).
