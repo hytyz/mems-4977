@@ -1,0 +1,50 @@
+FROM ubuntu:24.04
+
+ARG SWIFT_VERSION=6.4.1
+ARG XTOOL_VERSION=1.22.2
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      binutils \
+      build-essential \
+      ca-certificates \
+      curl \
+      git \
+      gnupg2 \
+      libc6-dev \
+      libcurl4-openssl-dev \
+      libedit2 \
+      libgcc-13-dev \
+      libncurses-dev \
+      libpython3-dev \
+      libsqlite3-0 \
+      libstdc++-13-dev \
+      libxml2-dev \
+      libz3-dev \
+      pkg-config \
+      python3 \
+      tzdata \
+      unzip \
+      zlib1g-dev \
+      usbmuxd \
+      libimobiledevice-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fL \
+      "https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2404/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz" \
+      -o /tmp/swift.tar.gz \
+    && mkdir -p /opt/swift \
+    && tar -xzf /tmp/swift.tar.gz -C /opt/swift --strip-components=1 \
+    && rm /tmp/swift.tar.gz
+ENV PATH="/opt/swift/usr/bin:${PATH}"
+
+RUN curl -fL \
+      "https://github.com/xtool-org/xtool/releases/download/${XTOOL_VERSION}/xtool-$(uname -m).AppImage" \
+      -o /usr/local/bin/xtool \
+    && chmod +x /usr/local/bin/xtool
+ENV APPIMAGE_EXTRACT_AND_RUN=1
+
+RUN swift --version && xtool --help >/dev/null && rm -rf /tmp/*
+
