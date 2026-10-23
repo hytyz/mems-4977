@@ -11,20 +11,14 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Municipal Companion</string>
+	<string>Municipal Elections Companion</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>UILaunchScreen</key>
 	<dict/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<!-- The dev API is plain http, so arbitrary loads are allowed in this
-		     assignment build. Remove for any production/App Store build. -->
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<!-- No ATS exceptions: the configured API is served over HTTPS. -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
