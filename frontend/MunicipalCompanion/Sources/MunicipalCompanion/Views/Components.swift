@@ -109,9 +109,20 @@ struct RemoteLogo: View {
     }
 }
 
-/// Reusable list row for a candidate.
+/// Reusable list row for a candidate: photo, name, position and municipality.
 struct CandidateRow: View {
     let candidate: Candidate
+    /// Position name for the candidate, resolved by the view that owns the
+    /// position/municipality lookup tables.
+    var positionName: String?
+    var municipalityName: String?
+
+    private var contestLine: String? {
+        let parts = [positionName, municipalityName]
+            .compactMap { $0?.trimmed }
+            .filter { !$0.isEmpty }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -119,9 +130,15 @@ struct CandidateRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(candidate.name)
                     .font(.headline)
+                if let contestLine {
+                    Text(contestLine)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
                 if let email = candidate.email?.trimmed, !email.isEmpty {
                     Text(email)
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }

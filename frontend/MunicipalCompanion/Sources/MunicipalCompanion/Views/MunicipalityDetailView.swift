@@ -112,7 +112,7 @@ struct PositionDetailView: View {
                 } else {
                     ForEach(viewModel.candidates) { candidate in
                         NavigationLink(value: candidate) {
-                            CandidateRow(candidate: candidate)
+                            CandidateRow(candidate: candidate, positionName: position.name)
                         }
                     }
                 }

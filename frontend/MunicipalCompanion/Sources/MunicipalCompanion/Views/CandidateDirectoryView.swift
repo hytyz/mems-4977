@@ -47,7 +47,11 @@ struct CandidateDirectoryView: View {
                 }
                 ForEach(viewModel.filteredCandidates) { candidate in
                     NavigationLink(value: candidate) {
-                        CandidateRow(candidate: candidate)
+                        CandidateRow(
+                            candidate: candidate,
+                            positionName: viewModel.positionName(candidate.positionId),
+                            municipalityName: viewModel.municipalityName(candidate.municipalityId)
+                        )
                     }
                 }
             }
