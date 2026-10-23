@@ -1,6 +1,8 @@
 Municipal Elections Management System
 =====================================
 
+ASP.NET Core MVC web app in src/MunicipalElections, with cookie-based Identity auth, an admin area, and a session-based personal voting guide
+
 Team
 ----
 Polina Omelyantseva
@@ -16,6 +18,7 @@ Polina Omelyantseva:
 - Implemented admin area CRUD for municipalities, positions, and candidates, including image upload
 - Created the dev container, helper scripts, and this documentation
 - Deployed the application to Azure App Service with the az CLI
+- GitHub Copilot prompt, instructions, and skills markdown files included in the .github folder
 
 Major challenges encountered
 ----------------------------
