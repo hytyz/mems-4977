@@ -236,7 +236,7 @@ persistent storage (`/home/...`) or Azure SQL.
   (`/uploads/...`); the app resolves them against the configured base URL
   (`mediaURL(from:)`) before loading.
 - **Signing key**: the JWT key sits in `appsettings.json` for this assignment;
-  in a real deployment it belongs in a secret store.
+  in a real deployment it belongs in a secret store. Note the key in this repo is not the key in production/
 - **Seeded admin credentials**: `super`/`pm` use a known password for marking
   purposes and are only created if missing; their passwords are not reset on
   startup. Do not reuse this seeding pattern for a real administration system.
