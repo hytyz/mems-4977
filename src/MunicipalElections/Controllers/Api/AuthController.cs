@@ -31,6 +31,15 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthResponse>> Register(AuthRequest request)
     {
         var email = request.Email.Trim();
+        var fullName = request.FullName.Trim();
+
+        // [Required] accepts whitespace-only strings, so reject a blank display
+        // name explicitly rather than storing one.
+        if (fullName.Length == 0)
+        {
+            ModelState.AddModelError(nameof(request.FullName), "Name is required.");
+            return ValidationProblem(ModelState);
+        }
 
         // Identity is configured with RequireUniqueEmail = false, so the API
         // enforces uniqueness itself with a clear error message.
@@ -61,13 +70,10 @@ public class AuthController : ControllerBase
 
         // ApplicationUser has no FullName property; persist the display name
         // as a "name" claim so login can return it.
-        if (!string.IsNullOrWhiteSpace(request.FullName))
-        {
-            await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, request.FullName.Trim()));
-        }
+        await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, fullName));
 
-        var token = _jwt.CreateToken(user.Id, user.Email ?? email, request.FullName.Trim());
-        return Ok(new AuthResponse(token, user.Email ?? email, request.FullName.Trim()));
+        var token = _jwt.CreateToken(user.Id, user.Email ?? email, fullName);
+        return Ok(new AuthResponse(token, user.Email ?? email, fullName));
     }
 
     [HttpPost("login")]

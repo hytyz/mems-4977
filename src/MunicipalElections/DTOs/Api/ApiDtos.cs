@@ -1,11 +1,39 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MunicipalElections.DTOs.Api;
 
 // --- DTOs for the mobile (SwiftUI) app REST API ---
 // JSON shapes are serialized with camelCase (configured in Program.cs).
+// Request DTOs carry DataAnnotations so [ApiController] returns a 400
+// ValidationProblemDetails for invalid input; the iOS app is not the only
+// client that may post to these endpoints.
 
-public record AuthRequest(string FullName, string Email, string Password);
+public class AuthRequest
+{
+    [Required(ErrorMessage = "Name is required.")]
+    [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
+    public string FullName { get; set; } = string.Empty;
 
-public record AuthLoginRequest(string Email, string Password);
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Email must be a valid email address.")]
+    [StringLength(254, ErrorMessage = "Email cannot exceed 254 characters.")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters.")]
+    public string Password { get; set; } = string.Empty;
+}
+
+public class AuthLoginRequest
+{
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Email must be a valid email address.")]
+    [StringLength(254, ErrorMessage = "Email cannot exceed 254 characters.")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
+    public string Password { get; set; } = string.Empty;
+}
 
 public record AuthResponse(string Token, string Email, string FullName);
 
@@ -49,7 +77,11 @@ public record PositionDetailDto(
     int MunicipalityId,
     IReadOnlyList<CandidateDto> Candidates);
 
-public record SavedCandidateRequest(int CandidateId);
+public class SavedCandidateRequest
+{
+    [Range(1, int.MaxValue, ErrorMessage = "A valid candidate id is required.")]
+    public int CandidateId { get; set; }
+}
 
 public record SavedCandidateDto(
     int Id,
