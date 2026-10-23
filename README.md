@@ -20,6 +20,8 @@ repository:
 
 **Deployed API:** <https://mems-assignment-app.azurewebsites.net>
 
+**Repository:** <https://github.com/hytyz/mems-4977>
+
 ## Repository layout
 
 ```
@@ -216,9 +218,17 @@ persistent storage (`/home/...`) or Azure SQL.
 - [`docs/architecture.md`](docs/architecture.md) — system architecture diagram (Mermaid).
 - [`docs/erd.md`](docs/erd.md) — database ERD including `SavedCandidate` (Mermaid).
 - [`docs/api.md`](docs/api.md) — endpoint reference with examples.
-- [`docs/screenshots/`](docs/screenshots) — web application screenshots.
-  iOS screenshots and the Azure portal deployment screenshot still need to be
-  captured from the Mac/portal and added here.
+- [`docs/screenshots/`](docs/screenshots) — web application screenshots from
+  the previous assignment.
+- [`docs/screenshots/ios/`](docs/screenshots/ios) — Municipal Elections
+  Companion screens: login, registration validation, municipalities,
+  directory, search and filters, candidate detail, save confirmation, voting
+  guide, removal, and profile.
+- Azure evidence: [`azure-app-service-overview.png`](docs/screenshots/azure-app-service-overview.png)
+  (App Service running on .NET 10),
+  [`azure-api-candidates.png`](docs/screenshots/azure-api-candidates.png) and
+  [`azure-api-municipalities.png`](docs/screenshots/azure-api-municipalities.png)
+  (live deployed API responses).
 
 ## Known limitations
 
