@@ -12,10 +12,19 @@ final class AuthManager: ObservableObject {
 
     private let store: TokenStore
 
-    init(store: TokenStore = UserDefaultsTokenStore()) {
-        self.store = store
-        self.auth = store.load()
+    init(store: TokenStore? = nil) {
+        let resolved = store ?? Self.defaultStore()
+        self.store = resolved
+        self.auth = resolved.load()
         ApiService.shared.setToken(auth?.token)
+    }
+
+    private static func defaultStore() -> TokenStore {
+        #if canImport(Security)
+        return KeychainTokenStore()
+        #else
+        return UserDefaultsTokenStore()
+        #endif
     }
 
     var isAuthenticated: Bool { auth != nil }
