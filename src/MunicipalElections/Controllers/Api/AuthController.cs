@@ -31,6 +31,13 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthResponse>> Register(AuthRequest request)
     {
         var email = request.Email.Trim();
+        var fullName = request.FullName.Trim();
+
+        if (fullName.Length == 0)
+        {
+            ModelState.AddModelError(nameof(request.FullName), "Name is required.");
+            return ValidationProblem(ModelState);
+        }
 
         var existing = await _userManager.FindByEmailAsync(email);
         if (existing is not null)
@@ -57,13 +64,10 @@ public class AuthController : ControllerBase
                 detail: string.Join(" ", result.Errors.Select(e => e.Description)));
         }
 
-        if (!string.IsNullOrWhiteSpace(request.FullName))
-        {
-            await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, request.FullName.Trim()));
-        }
+        await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, fullName));
 
-        var token = _jwt.CreateToken(user.Id, user.Email ?? email, request.FullName.Trim());
-        return Ok(new AuthResponse(token, user.Email ?? email, request.FullName.Trim()));
+        var token = _jwt.CreateToken(user.Id, user.Email ?? email, fullName);
+        return Ok(new AuthResponse(token, user.Email ?? email, fullName));
     }
 
     [HttpPost("login")]
