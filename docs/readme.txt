@@ -28,3 +28,7 @@ Major challenges encountered
 Deployed application URL
 ------------------------
 https://mems-assignment-app.azurewebsites.net
+
+Github Repository URL
+------------------------
+https://github.com/hytyz/mems-4977/tree/master
