@@ -6,7 +6,8 @@ using MunicipalElections.DTOs.Api;
 namespace MunicipalElections.Controllers.Api;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/positions")]
+[Route("api/offices")]
 public class PositionsController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
@@ -17,22 +18,29 @@ public class PositionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PositionDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<PositionDto>>> GetAll(
+        [FromQuery] string? city,
+        [FromQuery] int? municipalityId)
     {
         var positions = await _db.Positions
             .AsNoTracking()
-            .OrderBy(p => p.MunicipalityId).ThenBy(p => p.Name)
+            .InMunicipality(city, municipalityId)
+            .OrderBy(p => p.MunicipalityId).ThenBy(p => p.PositionId)
             .ToListAsync();
 
         return Ok(positions.Select(p => p.ToDto()));
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<PositionDetailDto>> GetById(int id)
+    public async Task<ActionResult<PositionDetailDto>> GetById(
+        int id,
+        [FromQuery] string? city,
+        [FromQuery] int? municipalityId)
     {
         var position = await _db.Positions
             .AsNoTracking()
             .Include(p => p.Candidates)
+            .InMunicipality(city, municipalityId)
             .FirstOrDefaultAsync(p => p.PositionId == id);
 
         if (position is null)
