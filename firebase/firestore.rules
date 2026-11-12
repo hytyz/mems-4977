@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.userEmail is string
+        && request.auth.token.userEmail.size() > 0;
+    }
+
+    function callerEmail() {
+      return request.auth.token.userEmail;
+    }
+
+    function isNonEmptyString(value, maxLength) {
+      return value is string && value.size() > 0 && value.size() <= maxLength;
+    }
+
+    match /UserProfiles/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(
+             ['userEmail', 'municipalityId', 'municipalityName', 'dateModified'])
+        && request.resource.data.userEmail == callerEmail()
+        && request.resource.data.municipalityId is int
+        && request.resource.data.municipalityId > 0
+        && isNonEmptyString(request.resource.data.municipalityName, 100)
+        && request.resource.data.dateModified is timestamp;
+    }
+
+    match /CandidateSelections/{selectionId} {
+
+      function ownsExisting() {
+        return resource.data.userEmail == callerEmail();
+      }
+
+      function validNotes(data) {
+        return data.notes is string && data.notes.size() <= 500;
+      }
+
+      function validNewSelection(data) {
+        return data.id == selectionId
+          && data.candidateId is int && data.candidateId > 0
+          && isNonEmptyString(data.candidateName, 100)
+          && data.positionId is int && data.positionId > 0
+          && isNonEmptyString(data.positionName, 100)
+          && data.municipalityId is int && data.municipalityId > 0
+          && isNonEmptyString(data.municipalityName, 100)
+          && validNotes(data);
+      }
+
+      allow get: if signedIn()
+        && (resource == null
+              ? selectionId.matches(request.auth.uid + '_[0-9]+')
+              : ownsExisting());
+
+      allow list: if signedIn() && ownsExisting();
+
+      allow create: if signedIn()
+        && selectionId == request.auth.uid + '_' + string(request.resource.data.candidateId)
+        && validNewSelection(request.resource.data);
+
+      allow update: if signedIn()
+        && ownsExisting()
+        && validNotes(request.resource.data);
+
+      allow delete: if signedIn() && ownsExisting();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
