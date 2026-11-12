@@ -31,6 +31,8 @@ public class AuthLoginRequest
 
 public record AuthResponse(string Token, string Email, string FullName);
 
+public record FirebaseTokenResponse(string Token, string Uid, string Email);
+
 public record MunicipalityDto(
     int Id,
     string Name,

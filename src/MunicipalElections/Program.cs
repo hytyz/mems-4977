@@ -47,6 +47,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddSingleton<FirebaseTokenService>();
 builder.Services.AddAuthentication()
     .AddJwtBearer(ApiAuth.JwtScheme, options =>
     {

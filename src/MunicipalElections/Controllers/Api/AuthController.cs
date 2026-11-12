@@ -10,24 +10,27 @@ namespace MunicipalElections.Controllers.Api;
 
 [ApiController]
 [Route("api/auth")]
-[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly JwtTokenService _jwt;
+    private readonly FirebaseTokenService _firebase;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        JwtTokenService jwt)
+        JwtTokenService jwt,
+        FirebaseTokenService firebase)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _jwt = jwt;
+        _firebase = firebase;
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Register(AuthRequest request)
     {
         var email = request.Email.Trim();
@@ -71,6 +74,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Login(AuthLoginRequest request)
     {
         var email = request.Email.Trim();
@@ -96,10 +100,34 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponse(token, user.Email ?? email, fullName));
     }
 
-    private static ActionResult BuildUnauthorized() => new UnauthorizedObjectResult(new
+    [HttpGet("firebase-token")]
+    [Authorize(AuthenticationSchemes = ApiAuth.JwtScheme)]
+    public async Task<ActionResult<FirebaseTokenResponse>> FirebaseToken()
     {
-        status = 401,
-        title = "Authentication failed",
-        detail = "Invalid email or password."
-    });
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = userId is null ? null : await _userManager.FindByIdAsync(userId);
+        if (user is null || string.IsNullOrWhiteSpace(user.Email))
+        {
+            return BuildUnauthorized("This account is no longer available. Please sign in again.");
+        }
+
+        if (!_firebase.IsConfigured)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status503ServiceUnavailable,
+                title: "Firebase is not configured",
+                detail: "The server has no Firebase service account, so candidate selections are unavailable.");
+        }
+
+        var token = _firebase.CreateCustomToken(user.Id);
+        return Ok(new FirebaseTokenResponse(token, user.Id, user.Email));
+    }
+
+    private static ActionResult BuildUnauthorized(string detail = "Invalid email or password.") =>
+        new UnauthorizedObjectResult(new
+        {
+            status = 401,
+            title = "Authentication failed",
+            detail
+        });
 }
