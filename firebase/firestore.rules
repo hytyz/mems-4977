@@ -42,14 +42,27 @@ service cloud.firestore {
       }
 
       function validNewSelection(data) {
-        return data.id == selectionId
+        return data.keys().hasOnly([
+                 'id', 'userEmail', 'candidateId', 'candidateName', 'candidatePhotoUrl',
+                 'positionId', 'positionName', 'municipalityId', 'municipalityName',
+                 'notes', 'dateCreated', 'dateModified'])
+          && data.keys().hasAll([
+                 'id', 'userEmail', 'candidateId', 'candidateName', 'positionId',
+                 'positionName', 'municipalityId', 'municipalityName', 'notes',
+                 'dateCreated', 'dateModified'])
+          && data.id == selectionId
+          && data.userEmail == callerEmail()
           && data.candidateId is int && data.candidateId > 0
           && isNonEmptyString(data.candidateName, 100)
+          && (!('candidatePhotoUrl' in data) || data.candidatePhotoUrl == null
+              || data.candidatePhotoUrl is string)
           && data.positionId is int && data.positionId > 0
           && isNonEmptyString(data.positionName, 100)
           && data.municipalityId is int && data.municipalityId > 0
           && isNonEmptyString(data.municipalityName, 100)
-          && validNotes(data);
+          && validNotes(data)
+          && data.dateCreated is timestamp
+          && data.dateModified is timestamp;
       }
 
       allow get: if signedIn()
@@ -65,7 +78,9 @@ service cloud.firestore {
 
       allow update: if signedIn()
         && ownsExisting()
-        && validNotes(request.resource.data);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notes', 'dateModified'])
+        && validNotes(request.resource.data)
+        && request.resource.data.dateModified is timestamp;
 
       allow delete: if signedIn() && ownsExisting();
     }
