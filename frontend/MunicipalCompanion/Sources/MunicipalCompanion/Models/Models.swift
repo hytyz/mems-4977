@@ -47,3 +47,9 @@ struct AuthResponse: Codable, Hashable {
     let email: String
     let fullName: String
 }
+
+struct FirebaseTokenResponse: Codable, Hashable {
+    let token: String
+    let uid: String
+    let email: String
+}
