@@ -18,5 +18,17 @@ func mediaURL(from urlString: String?) -> URL? {
 }
 
 func userMessage(for error: Error) -> String {
-    (error as? ApiError)?.errorDescription ?? error.localizedDescription
+    if let localized = error as? LocalizedError, let description = localized.errorDescription {
+        return description
+    }
+    return error.localizedDescription
+}
+
+func isCancellation(_ error: Error) -> Bool {
+    switch error {
+    case is CancellationError: return true
+    case let apiError as ApiError: return apiError.isCancellation
+    case let firebaseError as FirebaseServiceError: return firebaseError == .cancelled
+    default: return false
+    }
 }

@@ -21,6 +21,13 @@ enum AppConfig {
         }
     }
 
+    static var shippedBaseURL: String {
+        if let envBaseURL = loadEnvBaseURL(), isValidBaseURL(envBaseURL) {
+            return envBaseURL
+        }
+        return defaultBaseURL
+    }
+
     static var sanitizedBaseURL: String {
         var value = apiBaseURL.trimmed
         while value.hasSuffix("/") {
