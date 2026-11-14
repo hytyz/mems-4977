@@ -29,19 +29,6 @@ struct Candidate: Codable, Identifiable, Hashable {
     let municipalityId: Int
 }
 
-struct SavedCandidate: Codable, Identifiable, Hashable {
-    let id: Int
-    let candidateId: Int
-    let dateSaved: Date
-    let candidate: Candidate
-}
-
-struct SavedCandidateCreated: Codable, Hashable {
-    let id: Int
-    let candidateId: Int
-    let dateSaved: Date
-}
-
 struct AuthResponse: Codable, Hashable {
     let token: String
     let email: String

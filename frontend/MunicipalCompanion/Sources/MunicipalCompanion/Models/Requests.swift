@@ -10,7 +10,3 @@ struct RegisterRequest: Encodable {
     let email: String
     let password: String
 }
-
-struct SaveCandidateRequest: Encodable {
-    let candidateId: Int
-}
