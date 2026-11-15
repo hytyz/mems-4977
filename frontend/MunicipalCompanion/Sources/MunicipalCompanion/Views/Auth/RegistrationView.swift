@@ -1,18 +1,22 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var viewModel: AuthViewModel
+
+    init() {
+        _viewModel = StateObject(wrappedValue: AuthViewModel())
+    }
+
+    init(viewModel: AuthViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         Form {
             Section("Create Account") {
                 TextField("Full Name", text: $viewModel.fullName)
                     .textContentType(.name)
-                TextField("Email", text: $viewModel.email)
-                    .textContentType(.emailAddress)
-                    .keyboardType(.emailAddress)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
+                EmailField(text: $viewModel.email)
                 SecureField("Password (min 6 characters)", text: $viewModel.password)
                     .textContentType(.newPassword)
                 SecureField("Confirm Password", text: $viewModel.confirmPassword)
@@ -26,16 +30,8 @@ struct RegistrationView: View {
             }
 
             Section {
-                Button {
+                LoadingButton(title: "Register", isLoading: viewModel.isLoading) {
                     Task { await viewModel.register() }
-                } label: {
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                    } else {
-                        Text("Register")
-                            .frame(maxWidth: .infinity)
-                    }
                 }
                 .disabled(!viewModel.isRegisterEnabled)
             }
