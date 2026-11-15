@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MunicipalityRow: View {
     let municipality: Municipality
+    var isSelected = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -16,7 +17,14 @@ struct MunicipalityRow: View {
                     .font(.footnote)
                     .foregroundColor(.secondary)
             }
+            Spacer(minLength: 8)
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.accentColor)
+                    .accessibilityLabel("Current municipality")
+            }
         }
         .padding(.vertical, 2)
+        .contentShape(Rectangle())
     }
 }
