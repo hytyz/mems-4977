@@ -6,57 +6,38 @@ import Combine
 
 @MainActor
 final class CandidateDirectoryViewModel: ObservableObject {
-    @Published var searchText = "" {
-        didSet {
-            if searchText.trimmed != lastSearchedText {
-                reloadTask?.cancel()
-                reloadTask = Task { await load() }
-            }
-        }
-    }
-    @Published var selectedMunicipalityId: Int?
+    let municipality: UserMunicipality
+
+    @Published var searchText = ""
     @Published var selectedPositionId: Int?
     @Published private(set) var candidates: [Candidate] = []
-    @Published private(set) var municipalities: [Municipality] = []
     @Published private(set) var positions: [Position] = []
+    @Published private(set) var hasLoaded = false
     @Published private(set) var isLoading = false
     @Published var errorMessage: String?
 
     private let api: ApiService
-    private var reloadTask: Task<Void, Never>?
-    private var lastSearchedText: String = ""
 
-    init(api: ApiService = .shared) {
+    init(municipality: UserMunicipality, api: ApiService = .shared) {
+        self.municipality = municipality
         self.api = api
     }
 
     var filteredCandidates: [Candidate] {
-        candidates.filter { candidate in
-            if let municipalityId = selectedMunicipalityId, candidate.municipalityId != municipalityId {
-                return false
-            }
-            if let positionId = selectedPositionId, candidate.positionId != positionId {
-                return false
-            }
-            return true
-        }
+        guard let positionId = selectedPositionId else { return candidates }
+        return candidates.filter { $0.positionId == positionId }
     }
 
-    func municipalityName(_ id: Int) -> String {
-        municipalities.first { $0.id == id }?.name ?? "Municipality #\(id)"
-    }
-
-    func positionName(_ id: Int) -> String {
-        positions.first { $0.id == id }?.name ?? "Position #\(id)"
+    func positionName(_ id: Int) -> String? {
+        positions.first { $0.id == id }?.name
     }
 
     var hasActiveFilters: Bool {
-        selectedMunicipalityId != nil || selectedPositionId != nil
+        selectedPositionId != nil
     }
 
-    func clearFilters() {
-        selectedMunicipalityId = nil
-        selectedPositionId = nil
+    func loadIfNeeded() async {
+        if !hasLoaded { await load() }
     }
 
     func load() async {
@@ -64,55 +45,22 @@ final class CandidateDirectoryViewModel: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
+            async let officeFetch = api.positions(city: municipality.name)
             let query = searchText.trimmed
-            async let municipalityFetch = api.municipalities()
-            async let positionFetch = api.positions()
-            let fetched: [Candidate]
-            if query.isEmpty {
-                fetched = try await api.candidates()
-            } else {
-                fetched = try await api.searchCandidates(name: query)
+            let fetched = try await api.candidates(city: municipality.name, name: query)
+            let offices = try await officeFetch
+            candidates = fetched.filter { $0.municipalityId == municipality.id }
+            positions = offices.filter { $0.municipalityId == municipality.id }
+            if let selected = selectedPositionId, !positions.contains(where: { $0.id == selected }) {
+                selectedPositionId = nil
             }
-            let fetchedMunicipalities = try await municipalityFetch
-            let fetchedPositions = try await positionFetch
-            if Task.isCancelled { return }
-            candidates = fetched
-            municipalities = fetchedMunicipalities
-            positions = fetchedPositions
-            lastSearchedText = query
+            hasLoaded = true
         } catch {
-            if !((error as? ApiError)?.isCancellation ?? false) {
+            if !isCancellation(error) {
                 errorMessage = userMessage(for: error)
             }
         }
     }
-}
 
-@MainActor
-final class CandidateDetailViewModel: ObservableObject {
-    @Published private(set) var candidate: Candidate?
-    @Published private(set) var isLoading = false
-    @Published var errorMessage: String?
-
-    private let api: ApiService
-    private let candidateId: Int
-
-    init(candidateId: Int, api: ApiService = .shared) {
-        self.candidateId = candidateId
-        self.api = api
-    }
-
-    func load() async {
-        if candidate != nil { return }
-        isLoading = true
-        errorMessage = nil
-        defer { isLoading = false }
-        do {
-            candidate = try await api.candidate(id: candidateId)
-        } catch {
-            if !((error as? ApiError)?.isCancellation ?? false) {
-                errorMessage = userMessage(for: error)
-            }
-        }
-    }
+    // TODO: debounce search as you type
 }
