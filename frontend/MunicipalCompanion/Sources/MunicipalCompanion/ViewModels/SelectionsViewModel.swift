@@ -170,7 +170,11 @@ final class SelectionsViewModel: ObservableObject {
         let generation = self.generation
         let now = Date()
         try await store.updateNotes(notes, selectionId: selection.id, modifiedAt: now)
-        guard generation == self.generation else { return }
+        guard generation == self.generation,
+              let index = selections.firstIndex(where: { $0.id == selection.id })
+        else { return }
+        selections[index].notes = notes
+        selections[index].dateModified = now
         lastSyncedAt = now
     }
 
