@@ -8,7 +8,13 @@ import Combine
 final class CandidateDirectoryViewModel: ObservableObject {
     let municipality: UserMunicipality
 
-    @Published var searchText = ""
+    @Published var searchText = "" {
+        didSet {
+            if searchText.trimmed != lastSearchedText {
+                scheduleSearch()
+            }
+        }
+    }
     @Published var selectedPositionId: Int?
     @Published private(set) var candidates: [Candidate] = []
     @Published private(set) var positions: [Position] = []
@@ -17,6 +23,8 @@ final class CandidateDirectoryViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let api: ApiService
+    private var searchTask: Task<Void, Never>?
+    private var lastSearchedText = ""
 
     init(municipality: UserMunicipality, api: ApiService = .shared) {
         self.municipality = municipality
@@ -41,6 +49,7 @@ final class CandidateDirectoryViewModel: ObservableObject {
     }
 
     func load() async {
+        searchTask?.cancel()
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
@@ -49,7 +58,7 @@ final class CandidateDirectoryViewModel: ObservableObject {
             let query = searchText.trimmed
             let fetched = try await api.candidates(city: municipality.name, name: query)
             let offices = try await officeFetch
-            candidates = fetched.filter { $0.municipalityId == municipality.id }
+            apply(candidates: fetched, for: query)
             positions = offices.filter { $0.municipalityId == municipality.id }
             if let selected = selectedPositionId, !positions.contains(where: { $0.id == selected }) {
                 selectedPositionId = nil
@@ -62,5 +71,33 @@ final class CandidateDirectoryViewModel: ObservableObject {
         }
     }
 
-    // TODO: debounce search as you type
+    private func scheduleSearch() {
+        searchTask?.cancel()
+        searchTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 350_000_000)
+            if Task.isCancelled { return }
+            await self?.search()
+        }
+    }
+
+    private func search() async {
+        let query = searchText.trimmed
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+        do {
+            let fetched = try await api.candidates(city: municipality.name, name: query)
+            guard !Task.isCancelled, query == searchText.trimmed else { return }
+            apply(candidates: fetched, for: query)
+        } catch {
+            if !isCancellation(error) {
+                errorMessage = userMessage(for: error)
+            }
+        }
+    }
+
+    private func apply(candidates fetched: [Candidate], for query: String) {
+        candidates = fetched.filter { $0.municipalityId == municipality.id }
+        lastSearchedText = query
+    }
 }
