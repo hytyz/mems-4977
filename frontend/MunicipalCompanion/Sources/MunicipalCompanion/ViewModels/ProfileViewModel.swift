@@ -14,7 +14,6 @@ final class ProfileViewModel: ObservableObject {
 
     var email: String { auth.auth?.email ?? "" }
     var fullName: String { auth.auth?.fullName ?? "" }
-    var isAuthenticated: Bool { auth.isAuthenticated }
 
     init(auth: AuthManager? = nil) {
         self.auth = auth ?? .shared
@@ -29,7 +28,7 @@ final class ProfileViewModel: ObservableObject {
             return
         }
         guard AppConfig.isValidBaseURL(value) else {
-            statusMessage = "Enter a valid URL, e.g. http://127.0.0.1:5000"
+            statusMessage = "Enter a valid URL, e.g. https://example.azurewebsites.net"
             isError = true
             return
         }
@@ -40,13 +39,10 @@ final class ProfileViewModel: ObservableObject {
     }
 
     func resetBaseURL() {
-        baseURLText = AppConfig.defaultBaseURL
-        AppConfig.apiBaseURL = AppConfig.defaultBaseURL
+        let shipped = AppConfig.shippedBaseURL
+        baseURLText = shipped
+        AppConfig.apiBaseURL = shipped
         statusMessage = "API base URL reset to the default."
         isError = false
-    }
-
-    func logout() {
-        auth.signOut()
     }
 }
