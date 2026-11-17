@@ -1,6 +1,0 @@
-version: 1
-bundleID: com.polina.municipalcompanion
-product: MunicipalCompanion
-infoPath: Info.plist
-iconPath: Assets.xcassets/AppIcon.appiconset/AppIcon.png
-resources: [".env", "GoogleService-Info.plist"]
