@@ -40,3 +40,13 @@ struct RegistrationView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#if DEBUG
+struct RegistrationView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            RegistrationView(viewModel: AuthViewModel(api: .preview, auth: AuthManager.previewSignedOut))
+        }
+    }
+}
+#endif

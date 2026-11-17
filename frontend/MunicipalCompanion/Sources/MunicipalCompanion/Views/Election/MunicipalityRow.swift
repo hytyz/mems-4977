@@ -28,3 +28,13 @@ struct MunicipalityRow: View {
         .contentShape(Rectangle())
     }
 }
+
+#if DEBUG
+struct MunicipalityRow_Previews: PreviewProvider {
+    static var previews: some View {
+        List(PreviewData.municipalities) { municipality in
+            MunicipalityRow(municipality: municipality, isSelected: municipality.id == 1)
+        }
+    }
+}
+#endif

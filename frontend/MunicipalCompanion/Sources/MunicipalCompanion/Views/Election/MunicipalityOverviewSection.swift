@@ -26,3 +26,13 @@ struct MunicipalityOverviewSection: View {
         }
     }
 }
+
+#if DEBUG
+struct MunicipalityOverviewSection_Previews: PreviewProvider {
+    static var previews: some View {
+        List {
+            MunicipalityOverviewSection(municipality: PreviewData.municipality)
+        }
+    }
+}
+#endif

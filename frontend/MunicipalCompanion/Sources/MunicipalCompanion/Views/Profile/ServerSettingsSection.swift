@@ -27,3 +27,13 @@ struct ServerSettingsSection: View {
         }
     }
 }
+
+#if DEBUG
+struct ServerSettingsSection_Previews: PreviewProvider {
+    static var previews: some View {
+        Form {
+            ServerSettingsSection(viewModel: ProfileViewModel(auth: AuthManager.previewSignedIn))
+        }
+    }
+}
+#endif

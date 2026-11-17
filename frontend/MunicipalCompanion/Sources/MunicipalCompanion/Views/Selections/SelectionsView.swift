@@ -102,3 +102,14 @@ struct SelectionsView: View {
         }
     }
 }
+
+#if DEBUG
+struct SelectionsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            SelectionsView()
+        }
+        .previewEnvironment()
+    }
+}
+#endif

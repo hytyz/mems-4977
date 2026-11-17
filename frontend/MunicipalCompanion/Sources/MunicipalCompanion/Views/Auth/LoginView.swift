@@ -50,3 +50,13 @@ struct LoginView: View {
         }
     }
 }
+
+#if DEBUG
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        let auth = AuthManager.previewSignedOut
+        return LoginView(viewModel: AuthViewModel(api: .preview, auth: auth))
+            .environmentObject(auth)
+    }
+}
+#endif

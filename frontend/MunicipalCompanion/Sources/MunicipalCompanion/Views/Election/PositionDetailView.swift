@@ -37,3 +37,21 @@ struct PositionDetailView: View {
         .task { await viewModel.loadIfNeeded() }
     }
 }
+
+#if DEBUG
+struct PositionDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            PositionDetailView(
+                position: PreviewData.mayorPosition,
+                viewModel: PositionDetailViewModel(
+                    positionId: PreviewData.mayorPosition.id,
+                    municipality: PreviewData.userMunicipality,
+                    api: .preview
+                )
+            )
+        }
+        .previewEnvironment()
+    }
+}
+#endif

@@ -42,3 +42,16 @@ struct CandidateContactCard: View {
         .cardStyle()
     }
 }
+
+#if DEBUG
+struct CandidateContactCard_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            CandidateContactCard(candidate: PreviewData.savedCandidate)
+            CandidateContactCard(candidate: PreviewData.candidates[2])
+        }
+        .padding()
+        .background(Color(.systemGroupedBackground))
+    }
+}
+#endif

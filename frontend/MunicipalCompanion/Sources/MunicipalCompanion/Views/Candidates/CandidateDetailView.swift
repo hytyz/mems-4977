@@ -129,3 +129,26 @@ struct CandidateDetailView: View {
         }
     }
 }
+
+#if DEBUG
+struct CandidateDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            detail(PreviewData.availableCandidate)
+                .previewDisplayName("Can be added")
+            detail(PreviewData.savedCandidate)
+                .previewDisplayName("Already selected")
+            detail(PreviewData.blockedCandidate)
+                .previewDisplayName("Mayor already chosen")
+        }
+    }
+
+    @MainActor
+    private static func detail(_ candidate: Candidate) -> some View {
+        NavigationStack {
+            CandidateDetailView(candidate: candidate, municipality: PreviewData.userMunicipality, api: .preview)
+        }
+        .previewEnvironment()
+    }
+}
+#endif

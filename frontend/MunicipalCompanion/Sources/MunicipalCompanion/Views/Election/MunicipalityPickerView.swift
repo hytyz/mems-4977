@@ -107,3 +107,17 @@ struct MunicipalityPickerView: View {
         }
     }
 }
+
+#if DEBUG
+struct MunicipalityPickerView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            MunicipalityPickerView(
+                purpose: .change,
+                viewModel: MunicipalityPickerViewModel(api: .preview)
+            )
+        }
+        .previewEnvironment()
+    }
+}
+#endif

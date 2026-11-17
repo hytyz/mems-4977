@@ -22,3 +22,12 @@ struct CandidateFilterMenu: View {
         }
     }
 }
+
+#if DEBUG
+struct CandidateFilterMenu_Previews: PreviewProvider {
+    static var previews: some View {
+        CandidateFilterMenu(positions: PreviewData.positions, selectedPositionId: .constant(nil))
+            .padding()
+    }
+}
+#endif

@@ -70,3 +70,21 @@ struct SelectionCard: View {
         }
     }
 }
+
+#if DEBUG
+struct SelectionCard_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(PreviewData.selections) { selection in
+                        SelectionCard(selection: selection, onEdit: {}, onDelete: {})
+                    }
+                }
+                .padding()
+            }
+            .background(Color(.systemGroupedBackground))
+        }
+    }
+}
+#endif

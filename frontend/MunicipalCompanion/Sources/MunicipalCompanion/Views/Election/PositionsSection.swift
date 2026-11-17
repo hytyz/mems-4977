@@ -32,3 +32,18 @@ struct PositionsSection: View {
         }
     }
 }
+
+#if DEBUG
+struct PositionsSection_Previews: PreviewProvider {
+    static var previews: some View {
+        let viewModel = ElectionViewModel(municipality: PreviewData.userMunicipality, api: .preview)
+        return NavigationStack {
+            List {
+                PositionsSection(viewModel: viewModel)
+            }
+            .task { await viewModel.load() }
+        }
+        .previewEnvironment()
+    }
+}
+#endif

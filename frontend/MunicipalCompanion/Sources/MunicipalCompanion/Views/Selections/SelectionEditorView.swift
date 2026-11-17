@@ -91,3 +91,21 @@ struct SelectionEditorView: View {
         .interactiveDismissDisabled(viewModel.hasUnsavedChanges || viewModel.isSaving)
     }
 }
+
+#if DEBUG
+struct SelectionEditorView_Previews: PreviewProvider {
+    static var previews: some View {
+        let selections = SelectionsViewModel(store: PreviewSelectionStore(), api: .preview)
+        return Group {
+            SelectionEditorView(
+                viewModel: SelectionEditorViewModel(mode: .create(PreviewData.availableCandidate), selections: selections)
+            )
+            .previewDisplayName("Create")
+            SelectionEditorView(
+                viewModel: SelectionEditorViewModel(mode: .edit(PreviewData.selections[0]), selections: selections)
+            )
+            .previewDisplayName("Edit")
+        }
+    }
+}
+#endif

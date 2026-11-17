@@ -109,3 +109,20 @@ struct CandidateCard: View {
 extension String {
     var nonEmpty: String? { isEmpty ? nil : self }
 }
+
+#if DEBUG
+struct CandidateCard_Previews: PreviewProvider {
+    static var previews: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                CandidateCard(candidate: PreviewData.savedCandidate, positionName: "Mayor", isSelected: true)
+                CandidateCard(candidate: PreviewData.availableCandidate, positionName: "Councillor", style: .detailed)
+                CandidateCard(candidate: PreviewData.blockedCandidate, positionName: "Mayor", style: .tile)
+                    .frame(width: 260)
+            }
+            .padding()
+        }
+        .background(Color(.systemGroupedBackground))
+    }
+}
+#endif

@@ -30,3 +30,25 @@ struct PositionCandidatesSection: View {
         }
     }
 }
+
+#if DEBUG
+struct PositionCandidatesSection_Previews: PreviewProvider {
+    static var previews: some View {
+        let viewModel = PositionDetailViewModel(
+            positionId: PreviewData.mayorPosition.id,
+            municipality: PreviewData.userMunicipality,
+            api: .preview
+        )
+        return NavigationStack {
+            List {
+                PositionCandidatesSection(
+                    positionName: PreviewData.mayorPosition.name,
+                    viewModel: viewModel
+                )
+            }
+            .task { await viewModel.load() }
+        }
+        .previewEnvironment()
+    }
+}
+#endif

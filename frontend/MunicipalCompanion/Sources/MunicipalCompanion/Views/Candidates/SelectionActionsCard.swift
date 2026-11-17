@@ -102,3 +102,20 @@ struct SelectionActionsCard: View {
         .buttonStyle(.bordered)
     }
 }
+
+#if DEBUG
+struct SelectionActionsCard_Previews: PreviewProvider {
+    static var previews: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                SelectionActionsCard(candidate: PreviewData.availableCandidate)
+                SelectionActionsCard(candidate: PreviewData.savedCandidate)
+                SelectionActionsCard(candidate: PreviewData.blockedCandidate)
+            }
+            .padding()
+        }
+        .background(Color(.systemGroupedBackground))
+        .previewEnvironment()
+    }
+}
+#endif

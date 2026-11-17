@@ -25,3 +25,16 @@ struct ElectionView: View {
         .task { await viewModel.loadIfNeeded() }
     }
 }
+
+#if DEBUG
+struct ElectionView_Previews: PreviewProvider {
+    @MainActor static let viewModel = ElectionViewModel(municipality: PreviewData.userMunicipality, api: .preview)
+
+    static var previews: some View {
+        NavigationStack {
+            ElectionView(viewModel: viewModel)
+        }
+        .previewEnvironment()
+    }
+}
+#endif

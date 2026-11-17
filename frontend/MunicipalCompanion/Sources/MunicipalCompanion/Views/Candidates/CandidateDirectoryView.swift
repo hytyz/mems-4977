@@ -100,3 +100,16 @@ struct CandidateDirectoryView: View {
         return Array(repeating: GridItem(.flexible(), spacing: spacing, alignment: .top), count: count)
     }
 }
+
+#if DEBUG
+struct CandidateDirectoryView_Previews: PreviewProvider {
+    @MainActor static let viewModel = CandidateDirectoryViewModel(municipality: PreviewData.userMunicipality, api: .preview)
+
+    static var previews: some View {
+        NavigationStack {
+            CandidateDirectoryView(viewModel: viewModel)
+        }
+        .previewEnvironment()
+    }
+}
+#endif

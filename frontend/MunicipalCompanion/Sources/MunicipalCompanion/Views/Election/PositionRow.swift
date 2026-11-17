@@ -23,3 +23,13 @@ struct PositionRow: View {
         }
     }
 }
+
+#if DEBUG
+struct PositionRow_Previews: PreviewProvider {
+    static var previews: some View {
+        List(PreviewData.positions) { position in
+            PositionRow(position: position, chosenCount: position.id == 1 ? 1 : 0)
+        }
+    }
+}
+#endif

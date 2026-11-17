@@ -34,3 +34,14 @@ struct SelectedMark: View {
             .accessibilityLabel("In your selections")
     }
 }
+
+#if DEBUG
+struct CandidateRow_Previews: PreviewProvider {
+    static var previews: some View {
+        List {
+            CandidateRow(candidate: PreviewData.savedCandidate, positionName: "Mayor", isSelected: true)
+            CandidateRow(candidate: PreviewData.candidates[2])
+        }
+    }
+}
+#endif

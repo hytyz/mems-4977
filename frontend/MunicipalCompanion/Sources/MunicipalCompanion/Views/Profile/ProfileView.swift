@@ -85,3 +85,14 @@ struct ProfileView: View {
         return date.formatted(date: .abbreviated, time: .standard)
     }
 }
+
+#if DEBUG
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ProfileView(viewModel: ProfileViewModel(auth: AuthManager.previewSignedIn))
+        }
+        .previewEnvironment()
+    }
+}
+#endif
