@@ -357,3 +357,6 @@ appsettings.Development.json
 *.db-shm
 *.db-wal
 
+
+*-firebase-adminsdk-*.json
+service-account*.json
