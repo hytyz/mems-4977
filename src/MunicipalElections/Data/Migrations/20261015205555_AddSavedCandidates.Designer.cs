@@ -14,7 +14,6 @@ namespace MunicipalElections.Data.Migrations
     [Migration("20261015205555_AddSavedCandidates")]
     partial class AddSavedCandidates
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

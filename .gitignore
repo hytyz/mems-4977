@@ -156,7 +156,6 @@ PublishScripts/
 *.snupkg
 **/[Pp]ackages/*
 !**/[Pp]ackages/build/
-#!**/[Pp]ackages/repositories.config
 *.nuget.props
 *.nuget.targets
 
@@ -294,7 +293,6 @@ FodyWeavers.xsd
 
 *.sln.iml
 .idea/
-
 
 Makefile.in
 *.userprefs
