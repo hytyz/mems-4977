@@ -51,7 +51,7 @@ final class PreviewSelectionStore: SelectionStore {
     }
 
     func create(_ selection: CandidateSelection) async throws {
-        if items.contains(where: { $0.id == selection.id }) {
+        if items.contains(where: { $0.userEmail == selection.userEmail && $0.candidateId == selection.candidateId }) {
             throw FirebaseServiceError.duplicateSelection
         }
         items.append(selection)

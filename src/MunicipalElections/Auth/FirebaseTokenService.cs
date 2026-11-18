@@ -60,7 +60,7 @@ public sealed class FirebaseTokenService : IDisposable
 
     public bool IsConfigured => _credentials is not null;
 
-    public string CreateCustomToken(string uid, string email, IEnumerable<string> roles)
+    public string CreateCustomToken(string uid, string email)
     {
         if (_credentials is null || _serviceAccountEmail is null)
         {
@@ -76,14 +76,7 @@ public sealed class FirebaseTokenService : IDisposable
             { "iat", now.ToUnixTimeSeconds() },
             { "exp", now.Add(Lifetime).ToUnixTimeSeconds() },
             { "uid", uid },
-            {
-                "claims", new Dictionary<string, object>
-                {
-                    ["userEmail"] = email,
-                    ["userId"] = uid,
-                    ["roles"] = roles.ToArray()
-                }
-            }
+            { "claims", new Dictionary<string, object> { ["userEmail"] = email } }
         };
 
         var token = new JwtSecurityToken(new JwtHeader(_credentials), payload);

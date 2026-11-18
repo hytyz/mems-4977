@@ -119,8 +119,7 @@ public class AuthController : ControllerBase
                 detail: "The server has no Firebase service account, so candidate selections are unavailable.");
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var token = _firebase.CreateCustomToken(user.Id, user.Email, roles);
+        var token = _firebase.CreateCustomToken(user.Id, user.Email);
         return Ok(new FirebaseTokenResponse(token, user.Id, user.Email));
     }
 

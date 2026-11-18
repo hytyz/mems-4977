@@ -49,6 +49,8 @@ await t("unauthenticated rejected", assertFails(getDoc(S(anon, "alice_1"))));
 await t("owner reads own doc", assertSucceeds(getDoc(S(alice, "alice_1"))));
 await t("other user cannot read", assertFails(getDoc(S(bob, "alice_1"))));
 await t("owner query by email + city", assertSucceeds(getDocs(query(collection(alice, "CandidateSelections"), where("userEmail", "==", "alice@example.com"), where("municipalityId", "==", 1)))));
+await t("owner duplicate check by email + candidate", assertSucceeds(getDocs(query(collection(alice, "CandidateSelections"), where("userEmail", "==", "alice@example.com"), where("candidateId", "==", 1)))));
+await t("duplicate check for other's email rejected", assertFails(getDocs(query(collection(bob, "CandidateSelections"), where("userEmail", "==", "alice@example.com"), where("candidateId", "==", 1)))));
 await t("query for other's email rejected", assertFails(getDocs(query(collection(bob, "CandidateSelections"), where("userEmail", "==", "alice@example.com")))));
 await t("unfiltered query rejected", assertFails(getDocs(collection(bob, "CandidateSelections"))));
 

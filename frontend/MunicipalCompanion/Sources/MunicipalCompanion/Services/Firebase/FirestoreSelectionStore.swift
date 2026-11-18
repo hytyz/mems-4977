@@ -22,9 +22,14 @@ final class FirestoreSelectionStore: SelectionStore {
         let reference = collection.document(selection.id)
         let data = try Firestore.Encoder().encode(selection)
 
+        let duplicateQuery = collection
+            .whereField("userEmail", isEqualTo: selection.userEmail)
+            .whereField("candidateId", isEqualTo: selection.candidateId)
+            .limit(to: 1)
+
         try await FirebaseCall.run {
-            let existing = try await reference.getDocument()
-            guard !existing.exists else { throw FirebaseServiceError.duplicateSelection }
+            let duplicates = try await duplicateQuery.getDocuments(source: .server)
+            guard duplicates.isEmpty else { throw FirebaseServiceError.duplicateSelection }
             try await reference.setData(data)
         }
     }
