@@ -68,6 +68,7 @@
 		AE69A47A2F509F7023F5C509 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44CFD05B1EA759CF4C360C0 /* AppConfig.swift */; };
 		AF8028627E245884D6952696 /* ServerSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880F6E5E90DC3E6B0BF7AF12 /* ServerSettingsSection.swift */; };
 		B4BB5C84325FF56559659391 /* MunicipalityPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B01F1B35B24B91BECE596F /* MunicipalityPickerView.swift */; };
+		BC50A2F837A0330831FEC06E /* SelectedMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46933A28FBA684285D80F1 /* SelectedMark.swift */; };
 		C0E10BABB4127FB9F9DEEA09 /* PreviewEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AD934FA6614A6569BC36C /* PreviewEnvironment.swift */; };
 		C562A9F46747BCB9C8993A49 /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 8814554AFC3EA38C737F3B8D /* .env */; };
 		C5CA0C015B24B3F9A4BEE7F0 /* MunicipalityPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB715FEA064638C8175F0B8 /* MunicipalityPickerViewModel.swift */; };
@@ -155,6 +156,7 @@
 		D2C54F6C40B591A70BED6158 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		D5633CB3DD250B8716799F74 /* AppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellView.swift; sourceTree = "<group>"; };
 		D90AE734AEEA31FB273DB06C /* JSONCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoding.swift; sourceTree = "<group>"; };
+		DC46933A28FBA684285D80F1 /* SelectedMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedMark.swift; sourceTree = "<group>"; };
 		E1BB700C8217134E00826ED2 /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 		E488E5FDD9A363CF93E35B5B /* PositionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionRow.swift; sourceTree = "<group>"; };
 		E99E32A429623DA3D179B1C7 /* CandidateFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateFilterMenu.swift; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 				D012686CEC423E4A963C2799 /* LoadingView.swift */,
 				01BA22085337EC2EF89EDC99 /* NoticeBanner.swift */,
 				A26F63F81DD3AEB17D8A46AF /* RemoteLogo.swift */,
+				DC46933A28FBA684285D80F1 /* SelectedMark.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -546,6 +549,7 @@
 				F3D2826FBD7A22DD6F1330AB /* LoadingView.swift in Sources */,
 				1BB66C382D5AFBD033DB7D5B /* NoticeBanner.swift in Sources */,
 				3C0B8C689FA061D275D70455 /* RemoteLogo.swift in Sources */,
+				BC50A2F837A0330831FEC06E /* SelectedMark.swift in Sources */,
 				CDC539C05EFDE5F1FDDC1098 /* ElectionView.swift in Sources */,
 				7C16D747A93CBAA7941E6F85 /* MunicipalityOverviewSection.swift in Sources */,
 				B4BB5C84325FF56559659391 /* MunicipalityPickerView.swift in Sources */,

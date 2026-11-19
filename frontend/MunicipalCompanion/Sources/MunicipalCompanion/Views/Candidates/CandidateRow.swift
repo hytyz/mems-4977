@@ -27,14 +27,6 @@ struct CandidateRow: View {
     }
 }
 
-struct SelectedMark: View {
-    var body: some View {
-        Image(systemName: "star.fill")
-            .foregroundColor(.yellow)
-            .accessibilityLabel("In your selections")
-    }
-}
-
 #if DEBUG
 struct CandidateRow_Previews: PreviewProvider {
     static var previews: some View {
