@@ -1,9 +1,24 @@
+using Microsoft.AspNetCore.Mvc;
 using MunicipalElections.Models;
 
 namespace MunicipalElections.DTOs.Api;
 
 public static class MunicipalityFilters
 {
+    public static ActionResult? RequireMunicipality(
+        this ControllerBase controller, string? city, int? municipalityId)
+    {
+        if (municipalityId is not null || Normalize(city) is not null)
+        {
+            return null;
+        }
+
+        controller.ModelState.AddModelError(
+            "city",
+            "A municipality is required. Pass ?city=<name> or ?municipalityId=<id>.");
+        return controller.ValidationProblem(controller.ModelState);
+    }
+
     public static IQueryable<Municipality> InMunicipality(
         this IQueryable<Municipality> query, string? city, int? municipalityId)
     {

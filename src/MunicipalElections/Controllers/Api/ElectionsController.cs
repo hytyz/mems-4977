@@ -21,6 +21,11 @@ public class ElectionsController : ControllerBase
         [FromQuery] string? city,
         [FromQuery] int? municipalityId)
     {
+        if (this.RequireMunicipality(city, municipalityId) is { } missing)
+        {
+            return missing;
+        }
+
         var municipalities = await _db.Municipalities
             .AsNoTracking()
             .Include(m => m.Positions)

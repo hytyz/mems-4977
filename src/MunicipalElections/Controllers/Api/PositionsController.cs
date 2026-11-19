@@ -22,6 +22,11 @@ public class PositionsController : ControllerBase
         [FromQuery] string? city,
         [FromQuery] int? municipalityId)
     {
+        if (this.RequireMunicipality(city, municipalityId) is { } missing)
+        {
+            return missing;
+        }
+
         var positions = await _db.Positions
             .AsNoTracking()
             .InMunicipality(city, municipalityId)
@@ -37,6 +42,11 @@ public class PositionsController : ControllerBase
         [FromQuery] string? city,
         [FromQuery] int? municipalityId)
     {
+        if (this.RequireMunicipality(city, municipalityId) is { } missing)
+        {
+            return missing;
+        }
+
         var position = await _db.Positions
             .AsNoTracking()
             .Include(p => p.Candidates)
