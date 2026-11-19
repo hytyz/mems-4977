@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MunicipalElections.Models;
@@ -15,6 +16,7 @@ public static class DbInitializer
         ("Maple Ridge", "British Columbia", "A growing riverside city known for its parks and trails.", "maple-ridge.png"),
         ("Burnaby", "British Columbia", "The geographic heart of Metro Vancouver.", "burnaby.png"),
         ("Surrey", "British Columbia", "One of Canada's fastest-growing cities.", "surrey.png"),
+        ("Richmond", "British Columbia", "An island city at the mouth of the Fraser River.", "richmond.png"),
     ];
 
     private static readonly (string Name, int Seats)[] SeedPositions =
@@ -40,42 +42,152 @@ public static class DbInitializer
 
     private static readonly SeedCandidate[] SeedCandidates =
     [
-        new("Jordan Lee", "Pitt Meadows", "Mayor", "jordan-lee.png",
+        new("Jordan Lee", "Pitt Meadows", "Mayor", "jordan-lee.jpg",
             "jordan.lee@example.com", "https://jordanlee.example.com",
             "Jordan has served on council for eight years and is committed to affordable housing and climate resilience."),
-        new("Morgan Chen", "Pitt Meadows", "Mayor", "morgan-chen.png",
+        new("Morgan Chen", "Pitt Meadows", "Mayor", "morgan-chen.jpg",
             "morgan.chen@example.com", null,
             "A small-business owner championing local economic growth and public safety."),
-        new("Taylor Singh", "Pitt Meadows", "Councillor", "taylor-singh.png",
+        new("Taylor Singh", "Pitt Meadows", "Councillor", "taylor-singh.jpg",
             null, "https://taylorsingh.example.com",
             "Youth advocate and lifelong Pitt Meadows resident focused on recreation and transit."),
-        new("Alex Tran", "Pitt Meadows", "Councillor", "alex-tran.png",
+        new("Alex Tran", "Pitt Meadows", "Councillor", "alex-tran.jpg",
             "alex.tran@example.com", null,
             "Urban planner with a passion for walkable neighbourhoods."),
-        new("Priya Patel", "Pitt Meadows", "Councillor", "priya-patel.png",
+        new("Priya Patel", "Pitt Meadows", "Councillor", "priya-patel.jpg",
             null, null,
             "Teacher and parent advocating for schools and community services."),
-        new("Sam Nguyen", "Pitt Meadows", "School Trustee", "sam-nguyen.png",
+        new("Sam Nguyen", "Pitt Meadows", "School Trustee", "sam-nguyen.jpg",
             "sam.nguyen@example.com", null,
             "Education advocate focused on student well-being and modern learning spaces."),
-        new("Emily Carter", "Maple Ridge", "Mayor", "emily-carter.png",
-            "emily.carter@example.com", "https://emilycarter.example.com",
-            "Long-time Maple Ridge resident focused on sustainable growth and trail connectivity."),
-        new("Daniel Brooks", "Maple Ridge", "Councillor", "daniel-brooks.png",
-            "daniel.brooks@example.com", null,
-            "Volunteer firefighter advocating for emergency services and seniors' programs."),
-        new("Grace Kim", "Maple Ridge", "School Trustee", "grace-kim.png",
+
+        new("Marcus Bell", "Pitt Meadows", "Councillor", "marcus-bell.png",
+            "marcus.bell@example.com", null,
+            "Retired engineer focused on dike upgrades and flood preparedness along the Fraser."),
+        new("Farah Siddiqui", "Pitt Meadows", "Councillor", "farah-siddiqui.png",
+            null, "https://farahsiddiqui.example.com",
+            "Small-farm owner advocating for protecting agricultural land and local food."),
+        new("Noah Lindqvist", "Pitt Meadows", "Councillor", "noah-lindqvist.png",
+            "noah.lindqvist@example.com", null,
+            "Paramedic and coach focused on community safety and youth sports facilities."),
+        new("Chloe Dubois", "Pitt Meadows", "School Trustee", "chloe-dubois.png",
+            "chloe.dubois@example.com", null,
+            "French-immersion parent pushing for more program spaces and smaller class sizes."),
+        new("Ethan Park", "Pitt Meadows", "School Trustee", "ethan-park.png",
             null, null,
-            "Parent and literacy specialist committed to inclusive classrooms."),
-        new("Ravi Sharma", "Burnaby", "Mayor", "ravi-sharma.png",
-            "ravi.sharma@example.com", "https://ravisharma.example.com",
+            "Accountant committed to transparent school budgets and safe routes to school."),
+
+        new("Dana Whitfield", "Maple Ridge", "Mayor", "dana-whitfield.jpg",
+            "dana.whitfield@example.com", "https://danawhitfield.example.com",
+            "Two-term councillor running on sustainable growth and better trail connectivity."),
+        new("Liam Bouchard", "Maple Ridge", "Mayor", "liam-bouchard.jpg",
+            "liam.bouchard@example.com", null,
+            "Local contractor promising faster permits and more rental housing."),
+        new("Elena Markovic", "Maple Ridge", "Councillor", "elena-markovic.jpg",
+            "elena.markovic@example.com", null,
+            "Environmental scientist focused on protecting the Kanaka Creek watershed."),
+        new("Grace Okafor", "Maple Ridge", "Councillor", "grace-okafor.jpg",
+            null, "https://graceokafor.example.com",
+            "Nurse advocating for a walk-in clinic and stronger seniors' services."),
+        new("Marcus Hale", "Maple Ridge", "Councillor", "marcus-hale.jpg",
+            "marcus.hale@example.com", null,
+            "Volunteer firefighter focused on emergency preparedness and road safety."),
+        new("Owen Fraser", "Maple Ridge", "Councillor", "owen-fraser.jpg",
+            null, null,
+            "Youth hockey coach pushing for more recreation space and safer bike routes."),
+        new("Ravi Dhillon", "Maple Ridge", "School Trustee", "ravi-dhillon.jpg",
+            "ravi.dhillon@example.com", null,
+            "Parent and engineer committed to STEM programs and modern school buildings."),
+        new("Sophie Lam", "Maple Ridge", "School Trustee", "sophie-lam.jpg",
+            null, null,
+            "Literacy specialist championing inclusive classrooms and early reading support."),
+        new("Helen Zhao", "Burnaby", "Mayor", "helen-zhao.jpg",
+            "helen.zhao@example.com", "https://helenzhao.example.com",
             "Transit advocate with a decade of experience on regional committees."),
-        new("Olivia Martin", "Burnaby", "Councillor", "olivia-martin.png",
-            "olivia.martin@example.com", null,
-            "Housing policy researcher focused on rental protections and density near transit."),
-        new("Liam O'Connor", "Burnaby", "School Trustee", "liam-oconnor.png",
+        new("Thomas Wright", "Burnaby", "Mayor", "thomas-wright.jpg",
+            "thomas.wright@example.com", null,
+            "Former school principal running on community safety and fiscal responsibility."),
+        new("Amara Diallo", "Burnaby", "Councillor", "amara-diallo.jpg",
+            "amara.diallo@example.com", null,
+            "Housing policy researcher focused on rental protections near SkyTrain stations."),
+        new("Daniel Abara", "Burnaby", "Councillor", "daniel-abara.jpg",
+            null, "https://danielabara.example.com",
+            "Small-business owner working to revitalize the Hastings and Kingsway corridors."),
+        new("Isabel Santos", "Burnaby", "Councillor", "isabel-santos.jpg",
+            "isabel.santos@example.com", null,
+            "Community organizer focused on childcare spaces and newcomer services."),
+        new("Kevin Park", "Burnaby", "Councillor", "kevin-park.jpg",
             null, null,
+            "Civil engineer prioritizing sidewalks, cycling routes and road maintenance."),
+        new("Peter Kowalski", "Burnaby", "Councillor", "peter-kowalski.jpg",
+            "peter.kowalski@example.com", null,
+            "Retired firefighter advocating for parks, seniors' programs and public safety."),
+        new("Mei Tanaka", "Burnaby", "School Trustee", "mei-tanaka.jpg",
+            "mei.tanaka@example.com", null,
             "Former teacher championing trades education and after-school programs."),
+        new("Nadia Rahman", "Burnaby", "School Trustee", "nadia-rahman.jpg",
+            null, "https://nadiarahman.example.com",
+            "Parent advocate focused on mental-health supports for students."),
+        new("Catherine Yuen", "Richmond", "Mayor", "catherine-yuen.jpg",
+            "catherine.yuen@example.com", "https://catherineyuen.example.com",
+            "Long-time city councillor focused on dike upgrades and affordable housing."),
+        new("Graham Sterling", "Richmond", "Mayor", "graham-sterling.jpg",
+            "graham.sterling@example.com", null,
+            "Business leader running on economic development and efficient city services."),
+        new("Aisha Farouk", "Richmond", "Councillor", "aisha-farouk.jpg",
+            "aisha.farouk@example.com", null,
+            "Lawyer advocating for tenant protections and accessible city hall services."),
+        new("Benjamin Cho", "Richmond", "Councillor", "benjamin-cho.jpg",
+            null, "https://benjamincho.example.com",
+            "Urban planner focused on transit-oriented growth around the Canada Line."),
+        new("Dev Malhotra", "Richmond", "Councillor", "dev-malhotra.jpg",
+            "dev.malhotra@example.com", null,
+            "Farmer committed to preserving agricultural land and supporting local markets."),
+        new("Vivian Leung", "Richmond", "Councillor", "vivian-leung.jpg",
+            null, null,
+            "Arts administrator pushing for more community and cultural spaces."),
+        new("Lorraine Pascal", "Richmond", "School Trustee", "lorraine-pascal.jpg",
+            "lorraine.pascal@example.com", null,
+            "Retired school counsellor focused on student wellness and inclusion."),
+        new("Tobias Reinhardt", "Richmond", "School Trustee", "tobias-reinhardt.jpg",
+            null, null,
+            "Parent and IT professional championing digital-learning resources."),
+        new("Brent Lawson", "Surrey", "Mayor", "brent-lawson.jpg",
+            "brent.lawson@example.com", "https://brentlawson.example.com",
+            "Former RCMP officer running on public safety and a fully staffed police service."),
+        new("Harpreet Gill", "Surrey", "Mayor", "harpreet-gill.jpg",
+            "harpreet.gill@example.com", null,
+            "Councillor focused on SkyTrain expansion and affordable family housing."),
+        new("Anita Verma", "Surrey", "Councillor", "anita-verma.jpg",
+            "anita.verma@example.com", null,
+            "Social worker advocating for youth programs and homelessness prevention."),
+        new("Claire Donovan", "Surrey", "Councillor", "claire-donovan.jpg",
+            null, "https://clairedonovan.example.com",
+            "Environmental educator focused on protecting the urban tree canopy."),
+        new("Colin Mercer", "Surrey", "Councillor", "colin-mercer.jpg",
+            "colin.mercer@example.com", null,
+            "Small-business owner pushing for faster permits and local hiring."),
+        new("Michael Osei", "Surrey", "Councillor", "michael-osei.jpg",
+            null, null,
+            "Engineer prioritizing roads, sidewalks and safer school zones."),
+        new("Jasmine Sandhu", "Surrey", "School Trustee", "jasmine-sandhu.jpg",
+            "jasmine.sandhu@example.com", null,
+            "Parent advocate fighting overcrowding and portables in Surrey schools."),
+        new("Rachel Kim", "Surrey", "School Trustee", "rachel-kim.jpg",
+            null, "https://rachelkim.example.com",
+            "Former teacher championing early literacy and English-language learner support."),
+    ];
+
+    private static readonly (string Name, string Municipality)[] RetiredSeedCandidates =
+    [
+        ("Emily Carter", "Maple Ridge"),
+        ("Daniel Brooks", "Maple Ridge"),
+        ("Grace Kim", "Maple Ridge"),
+        ("Ravi Sharma", "Burnaby"),
+        ("Olivia Martin", "Burnaby"),
+        ("Liam O'Connor", "Burnaby"),
+        ("Nadia Rahman", "Pitt Meadows"),
+        ("Owen Fraser", "Pitt Meadows"),
     ];
 
     public static async Task SeedAsync(IServiceProvider services)
@@ -84,6 +196,7 @@ public static class DbInitializer
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var webRoot = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>().WebRootPath;
 
         db.Database.Migrate();
 
@@ -94,7 +207,7 @@ public static class DbInitializer
         var super = await EnsureUserAsync(userManager, "super", seededPassword, Roles.SuperAdmin);
         var pm = await EnsureUserAsync(userManager, "pm", seededPassword, Roles.MunicipalityAdmin);
 
-        await SeedElectionDataAsync(db);
+        await SeedElectionDataAsync(db, webRoot);
 
         var pmEntity = await db.Municipalities.FirstAsync(m => m.Name == "Pitt Meadows");
 
@@ -111,7 +224,7 @@ public static class DbInitializer
         _ = super;
     }
 
-    private static async Task SeedElectionDataAsync(ApplicationDbContext db)
+    private static async Task SeedElectionDataAsync(ApplicationDbContext db, string webRoot)
     {
         var municipalities = await db.Municipalities.ToListAsync();
 
@@ -131,7 +244,7 @@ public static class DbInitializer
                 db.Municipalities.Add(municipality);
                 municipalities.Add(municipality);
             }
-            else if (string.IsNullOrWhiteSpace(municipality.LogoFileName))
+            else if (ImageMissing(webRoot, "municipalities", municipality.LogoFileName))
             {
                 municipality.LogoFileName = seed.Logo;
             }
@@ -175,6 +288,16 @@ public static class DbInitializer
 
         await db.SaveChangesAsync();
 
+        foreach (var (name, municipalityName) in RetiredSeedCandidates)
+        {
+            var retired = await db.Candidates
+                .Where(c => c.Name == name && c.Position!.Municipality!.Name == municipalityName)
+                .ToListAsync();
+            db.Candidates.RemoveRange(retired);
+        }
+
+        await db.SaveChangesAsync();
+
         foreach (var seed in SeedCandidates)
         {
             var municipality = municipalities.First(m => m.Name == seed.Municipality);
@@ -198,7 +321,7 @@ public static class DbInitializer
                 };
                 db.Candidates.Add(candidate);
             }
-            else if (string.IsNullOrWhiteSpace(candidate.PhotoFileName))
+            else if (ImageMissing(webRoot, "candidates", candidate.PhotoFileName))
             {
                 candidate.PhotoFileName = seed.Photo;
             }
@@ -221,6 +344,10 @@ public static class DbInitializer
             await db.SaveChangesAsync();
         }
     }
+
+    private static bool ImageMissing(string webRoot, string folder, string? fileName) =>
+        string.IsNullOrWhiteSpace(fileName)
+        || !File.Exists(Path.Combine(webRoot, "uploads", folder, fileName));
 
     private static async Task EnsureRoleAsync(RoleManager<IdentityRole> roleManager, string roleName)
     {
