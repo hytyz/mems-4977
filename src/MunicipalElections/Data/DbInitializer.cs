@@ -24,6 +24,11 @@ public static class DbInitializer
         ("School Trustee", 2),
     ];
 
+    private static readonly Dictionary<(string Municipality, string Position), int> SeatOverrides = new()
+    {
+        [("Pitt Meadows", "Councillor")] = 5,
+    };
+
     private sealed record SeedCandidate(
         string Name,
         string Municipality,
@@ -138,6 +143,7 @@ public static class DbInitializer
         {
             foreach (var template in SeedPositions)
             {
+                var seats = SeatOverrides.GetValueOrDefault((municipality.Name, template.Name), template.Seats);
                 var position = await db.Positions.FirstOrDefaultAsync(p =>
                     p.MunicipalityId == municipality.MunicipalityId &&
                     (p.Name == template.Name ||
@@ -148,13 +154,21 @@ public static class DbInitializer
                     db.Positions.Add(new Position
                     {
                         Name = template.Name,
-                        SeatsAvailable = template.Seats,
+                        SeatsAvailable = seats,
                         MunicipalityId = municipality.MunicipalityId
                     });
                 }
-                else if (position.Name != template.Name)
+                else
                 {
-                    position.Name = template.Name;
+                    if (position.Name != template.Name)
+                    {
+                        position.Name = template.Name;
+                    }
+
+                    if (seats != template.Seats && position.SeatsAvailable == template.Seats)
+                    {
+                        position.SeatsAvailable = seats;
+                    }
                 }
             }
         }

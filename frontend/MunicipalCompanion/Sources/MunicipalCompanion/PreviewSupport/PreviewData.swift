@@ -27,7 +27,7 @@ enum PreviewData {
 
     static let positions: [Position] = [
         Position(id: 1, name: "Mayor", seatsAvailable: 1, municipalityId: 1, candidates: nil),
-        Position(id: 2, name: "Councillor", seatsAvailable: 6, municipalityId: 1, candidates: nil),
+        Position(id: 2, name: "Councillor", seatsAvailable: 5, municipalityId: 1, candidates: nil),
         Position(id: 3, name: "Mayor", seatsAvailable: 1, municipalityId: 2, candidates: nil)
     ]
 
