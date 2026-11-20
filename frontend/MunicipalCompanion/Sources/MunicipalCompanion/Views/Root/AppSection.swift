@@ -20,7 +20,7 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
     var systemImage: String {
         switch self {
         case .election: return "building.columns.fill"
-        case .directory: return "person.3.fill"
+        case .directory: return "person.2.fill"
         case .selections: return "star.fill"
         case .profile: return "person.crop.circle.fill"
         }

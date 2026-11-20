@@ -3,6 +3,12 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject private var authManager: AuthManager
     @StateObject private var viewModel: AuthViewModel
+    @FocusState private var focusedField: Field?
+
+    private enum Field {
+        case email
+        case password
+    }
 
     init() {
         _viewModel = StateObject(wrappedValue: AuthViewModel())
@@ -25,8 +31,14 @@ struct LoginView: View {
 
                 Section("Sign In") {
                     EmailField(text: $viewModel.email)
+                        .focused($focusedField, equals: .email)
+                        .submitLabel(.next)
+                        .onSubmit { focusedField = .password }
                     SecureField("Password", text: $viewModel.password)
                         .textContentType(.password)
+                        .focused($focusedField, equals: .password)
+                        .submitLabel(.go)
+                        .onSubmit(signIn)
                 }
 
                 if let message = viewModel.errorMessage {
@@ -36,9 +48,7 @@ struct LoginView: View {
                 }
 
                 Section {
-                    LoadingButton(title: "Sign In", isLoading: viewModel.isLoading) {
-                        Task { await viewModel.login() }
-                    }
+                    LoadingButton(title: "Sign In", isLoading: viewModel.isLoading, action: signIn)
                     .disabled(!viewModel.isLoginEnabled)
 
                     NavigationLink("Create an Account") {
@@ -46,8 +56,21 @@ struct LoginView: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Municipal Elections")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") { focusedField = nil }
+                }
+            }
         }
+    }
+
+    private func signIn() {
+        guard viewModel.isLoginEnabled else { return }
+        focusedField = nil
+        Task { await viewModel.login() }
     }
 }
 
