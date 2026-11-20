@@ -4,6 +4,7 @@ struct SelectionEditorView: View {
     @ObservedObject var viewModel: SelectionEditorViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var isConfirmingDiscard = false
+    @FocusState private var isEditingNotes: Bool
 
     var body: some View {
         NavigationStack {
@@ -24,6 +25,7 @@ struct SelectionEditorView: View {
                 Section {
                     TextEditor(text: $viewModel.notes)
                         .frame(minHeight: 140)
+                        .focused($isEditingNotes)
                         .accessibilityLabel("Notes")
                 } header: {
                     Text("Notes")
@@ -51,9 +53,14 @@ struct SelectionEditorView: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle(viewModel.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") { isEditingNotes = false }
+                }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         if viewModel.hasUnsavedChanges {

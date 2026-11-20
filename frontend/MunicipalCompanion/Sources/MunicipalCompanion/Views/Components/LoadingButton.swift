@@ -10,6 +10,7 @@ struct LoadingButton: View {
         Button(action: action) {
             label
                 .frame(maxWidth: .infinity)
+                .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
         }
     }
 

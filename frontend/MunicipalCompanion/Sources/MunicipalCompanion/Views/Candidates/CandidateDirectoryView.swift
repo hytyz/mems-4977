@@ -9,7 +9,7 @@ struct CandidateDirectoryView: View {
     var body: some View {
         content
             .navigationTitle("Directory")
-            .searchable(text: $viewModel.searchText, prompt: Text("Search candidates by name"))
+            .searchable(text: $viewModel.searchText, prompt: Text("Search by name"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     CityBadge(city: viewModel.municipality.name)

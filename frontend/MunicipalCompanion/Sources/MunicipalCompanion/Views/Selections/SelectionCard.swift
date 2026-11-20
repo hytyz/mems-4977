@@ -49,6 +49,8 @@ struct SelectionCard: View {
             .font(.caption)
             .foregroundColor(.secondary)
 
+            Spacer(minLength: 0)
+
             HStack(spacing: 12) {
                 Button(action: onEdit) {
                     Label("Edit", systemImage: "pencil")
