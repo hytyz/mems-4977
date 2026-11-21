@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MunicipalElections.Auth;
 using MunicipalElections.Data;
 using MunicipalElections.DTOs.Api;
 
 namespace MunicipalElections.Controllers.Api;
 
 [ApiController]
+[Authorize(AuthenticationSchemes = ApiAuth.JwtScheme)]
 [Route("api/[controller]")]
 public class CandidatesController : ControllerBase
 {
